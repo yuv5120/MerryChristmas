@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Merry Christmas!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #1a365d, #2c5282);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+
+        .snow {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: snowfall 15s linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-10px) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .santa-sleigh {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            animation: fly 20s linear infinite;
+        }
+
+        @keyframes fly {
+            0% {
+                left: -200px;
+                top: 100px;
+            }
+            100% {
+                left: 100%;
+                top: 100px;
+            }
+        }
+
+        .gift {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ff4444;
+            border: 2px solid #cc0000;
+            animation: fall 4s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        h1 {
+            font-size: 4em;
+            margin: 0;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff0000;
+            }
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ff4444, 0 0 40px #ff8888;
+            }
+        }
+
+        .control-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>Merry Christmas!</h1>
+        <p>May your days be merry and bright!</p>
+    </div>
+
+    <div class="santa-sleigh">
+        <svg viewBox="0 0 100 50" width="100%" height="100%">
+            <path d="M10,25 Q50,0 90,25" stroke="red" fill="none" stroke-width="2"/>
+            <circle cx="20" cy="25" r="5" fill="brown"/>
+            <circle cx="40" cy="25" r="5" fill="brown"/>
+            <rect x="60" y="15" width="20" height="15" fill="red"/>
+            <circle cx="70" cy="15" r="5" fill="white"/>
+        </svg>
+    </div>
+
+    <div class="control-panel">
+        <button onclick="toggleMusic()" id="musicBtn">Play Music</button>
+        <button onclick="toggleSnow()" id="snowBtn">Toggle Snow</button>
+    </div>
+
+    <audio id="jingleBells" loop>
+        <source src="data:audio/midi;base64,TVRoZAAAAAAAAAAAAE1UcmsAAAAMAP8vAQoA/y8BAAAA/y8BAA==" type="audio/midi">
+    </audio>
+
+    <script>
+        // Create snow
+        function createSnow() {
+            const snow = document.createElement('div');
+            snow.className = 'snow';
+            snow.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(snow);
+
+            snow.addEventListener('animationend', () => {
+                snow.remove();
+            });
+        }
+
+        // Create gifts
+        function createGift() {
+            const gift = document.createElement('div');
+            gift.className = 'gift';
+            gift.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(gift);
+
+            gift.addEventListener('animationend', () => {
+                gift.remove();
+            });
+        }
+
+        let snowInterval;
+        let giftInterval;
+        let isSnowing = true;
+
+        function toggleSnow() {
+            if (isSnowing) {
+                clearInterval(snowInterval);
+                clearInterval(giftInterval);
+                document.getElementById('snowBtn').textContent = 'Start Snow';
+            } else {
+                startSnowAndGifts();
+                document.getElementById('snowBtn').textContent = 'Stop Snow';
+            }
+            isSnowing = !isSnowing;
+        }
+
+        function startSnowAndGifts() {
+            snowInterval = setInterval(createSnow, 200);
+            giftInterval = setInterval(createGift, 1000);
+        }
+
+        let audio = document.getElementById('jingleBells');
+        
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('musicBtn').textContent = 'Pause Music';
+            } else {
+                audio.pause();
+                document.getElementById('musicBtn').textContent = 'Play Music';
+            }
+        }
+
+        // Start animations when page loads
+        startSnowAndGifts();
+    </script>
+</body>
+</html>
